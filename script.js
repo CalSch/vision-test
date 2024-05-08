@@ -23,7 +23,7 @@ let ctx = canvas.getContext('2d');
 
 let startTime = Date.now();
 let lastClickTime = Date.now();
-let duration = 60;
+let duration = 120;
 
 let bgColor = [255,0,0];
 let shapeColor = [0,0,255];
@@ -75,6 +75,7 @@ function generateNewShape() {
 		shapeColor.push(Math.floor(Math.random()*255));
 		bgColor.push(Math.floor(Math.random()*255));
 	}
+	// console.log(contrast(shapeColor,bgColor))
 }
 
 function checkForClick() {
@@ -95,6 +96,7 @@ function checkForClick() {
 			color: shapeColor
 		},
 		bg: bgColor,
+		contrast: contrast(shapeColor,bgColor),
 		hit: false
 	};
 	lastClickTime = Date.now();
@@ -168,6 +170,7 @@ function flattenDataPoint(d) {
 		bgR: d.bg[0],
 		bgG: d.bg[1],
 		bgB: d.bg[2],
+		colorContrast: d.contrast,
 	}
 }
 
@@ -194,3 +197,29 @@ function getCSV() {
 
 	return text;
 }
+
+//#region color
+const RED = 0.2126;
+const GREEN = 0.7152;
+const BLUE = 0.0722;
+
+const GAMMA = 2.4;
+
+function luminance(r, g, b) {
+  var a = [r, g, b].map((v) => {
+    v /= 255;
+    return v <= 0.03928
+      ? v / 12.92
+      : Math.pow((v + 0.055) / 1.055, GAMMA);
+  });
+  return a[0] * RED + a[1] * GREEN + a[2] * BLUE;
+}
+
+function contrast(rgb1, rgb2) {
+  var lum1 = luminance(...rgb1);
+  var lum2 = luminance(...rgb2);
+  var brightest = Math.max(lum1, lum2);
+  var darkest = Math.min(lum1, lum2);
+  return (brightest + 0.05) / (darkest + 0.05);
+}
+//#endregion
