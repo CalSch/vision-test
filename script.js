@@ -1,5 +1,5 @@
-let screenWidth = 800;
-let screenHeight = 600;
+let screenWidth = 600;
+let screenHeight = 400;
 
 /** @type {HTMLCanvasElement} */
 let canvas = document.getElementById("screen");
@@ -21,6 +21,9 @@ canvas.addEventListener('mousedown',(ev)=>{
 
 let ctx = canvas.getContext('2d');
 
+let startTime = Date.now();
+let duration = 60;
+
 let bgColor = [255,0,0];
 let shapeColor = [0,0,255];
 let shapeX = 400;
@@ -29,6 +32,8 @@ let shapeRadius = 50;
 
 let hit = 0;
 let missed = 0;
+
+let started = false;
 
 function generateNewShape() {
 	shapeX = Math.random()*screenWidth;
@@ -39,6 +44,13 @@ function generateNewShape() {
 }
 
 function checkForClick() {
+	if (!started) {
+		startTime = Date.now();
+		started = true;
+	}
+	if (isTimeUp()) {
+		return;
+	}
 	let dist = Math.hypot(mouseX-shapeX,mouseY-shapeY);
 	if (dist <= shapeRadius) {
 		hit++;
@@ -46,6 +58,10 @@ function checkForClick() {
 		missed++;
 	}
 	generateNewShape();
+}
+
+function isTimeUp() {
+	return started && (Date.now()-startTime > 1000*duration);
 }
 
 function listToColorString(c) {
@@ -64,6 +80,15 @@ function draw() {
 	ctx.fillStyle = "black";
 	ctx.font = "20px monospace";
 	ctx.fillText(`hit ${hit}/${hit+missed}`,10,30);
+
+	if (started)
+		ctx.fillText(`${(duration-(Date.now()-startTime)/1000).toFixed(2)}s left`,10,60);
+
+	if (isTimeUp()) {
+		ctx.font = "50px monospace";
+		ctx.fillStyle = "red";
+		ctx.fillText("time up",250,250);
+	}
 }
 
 setInterval(draw,1000/60);
