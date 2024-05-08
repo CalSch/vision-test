@@ -1,5 +1,5 @@
-let screenWidth = 600;
-let screenHeight = 400;
+let screenWidth = 800;
+let screenHeight = 600;
 
 /** @type {HTMLCanvasElement} */
 let canvas = document.getElementById("screen");
@@ -23,7 +23,7 @@ let ctx = canvas.getContext('2d');
 
 let startTime = Date.now();
 let lastClickTime = Date.now();
-let duration = 120;
+let duration = 60;
 
 let bgColor = [255,0,0];
 let shapeColor = [0,0,255];
@@ -117,6 +117,12 @@ function isTimeUp() {
 
 function listToColorString(c) {
 	return `rgb(${c[0]},${c[1]},${c[2]})`;
+}
+
+function restart() {
+	started = false;
+	startTime = Date.now();
+	lastClickTime = Date.now();
 }
 
 function draw() {
