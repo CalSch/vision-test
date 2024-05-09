@@ -1,5 +1,5 @@
 let screenWidth = 800;
-let screenHeight = 600;
+let screenHeight = 500;
 
 /** @type {HTMLCanvasElement} */
 let canvas = document.getElementById("screen");
