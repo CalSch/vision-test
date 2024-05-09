@@ -254,7 +254,10 @@ function csvToData(csv) {
 		if (values.length <= 1) continue;
 		for (let i=0;i<values.length;i++) {
 			if (values[i] == "") continue;
-			dataPoint[fields[i]] = values[i];
+			let v = values[i];
+			if (v.toLowerCase() == "true") v = true;
+			else if (v.toLocaleLowerCase() == "false") v = false;
+			dataPoint[fields[i]] = v;
 		}
 
 		if (dataPoint.hit) {
