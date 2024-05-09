@@ -4,19 +4,59 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Vision Test</title>
+
+	<style>
+        .split-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            grid-template-rows: 1fr;
+            grid-column-gap: 0px;
+            grid-row-gap: 0px;
+            gap: 5px;
+        }
+        .split-left  { grid-area: 1 / 1 / 2 / 2; }
+        .split-right { grid-area: 1 / 2 / 2 / 3; }
+        
+        .split-container > div {
+            border: 1px solid grey;
+            padding: 5px;
+        }
+
+        canvas {
+            border: 1px solid black;
+        }
+        label {
+            vertical-align: top;
+        }
+        button {
+            padding: 4px 8px;
+            margin: 3px;
+        }
+    </style>
 </head>
 <body>
-	<h1>Vision Test</h1>
-	<canvas id="screen"></canvas>
-	<br>
-	<button onclick="restart()">Restart</button>
-	<hr>
-	<button onclick="loadData()">Load from CSV</button>
-	<button onclick="getData()">Save to CSV</button>
-	<br>
-	<label for="data">CSV Data: (input and output)</label>
-	<br>
-	<textarea name="data" id="data" rows="30" cols="80" value=""></textarea>
+	<div class="split-container">
+		<div class="split-left">
+			<h1>Vision Test</h1>
+			<canvas id="screen"></canvas>
+			<br>
+			<button onclick="restart()">Restart</button>
+			<hr>
+			<button onclick="loadData()">Load from CSV</button>
+			<button onclick="getData()">Save to CSV</button>
+			<br>
+			<label for="data">CSV Data: (input and output)</label>
+			<br>
+			<textarea name="data" id="data" rows="30" cols="80" value=""></textarea>
+		</div>
+		<div class="split-right">
+			<h2>Config</h2>
+			<div id="config">a</div>
+		</div>
+	</div>
+	
+
+	<script src="https://calschwick.net/configjs/config.js"></script>
 	<script src="script.js"></script>
 </body>
 </html>
