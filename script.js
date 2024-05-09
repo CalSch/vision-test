@@ -201,7 +201,7 @@ function expandFlatDataPoint(d) {
 			color: [d.shapeR,d.shapeG,d.shapeB],
 		},
 		bg: [d.bgR,d.bgG,d.bgB],
-		contrast: d.contrast
+		contrast: d.colorContrast
 	}
 }
 
@@ -248,7 +248,7 @@ function csvToData(csv) {
 		let dataPoint = {};
 
 		let values = line.split(',');
-		if (values.length == 0) continue;
+		if (values.length <= 1) continue;
 		for (let i=0;i<values.length;i++) {
 			if (values[i] == "") continue;
 			dataPoint[fields[i]] = values[i];
@@ -259,6 +259,8 @@ function csvToData(csv) {
 		} else {
 			csvMissed++;
 		}
+
+		dataPoint = expandFlatDataPoint(dataPoint);
 
 		newDataPoints.push(dataPoint);
 	}
