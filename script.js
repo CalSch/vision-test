@@ -72,9 +72,12 @@ function generateNewShape() {
 	shapeRadius = Math.floor(Math.random()*50 + 10);
 	shapeColor = [];
 	bgColor = [];
+	let shapeBrightness = Math.random()*255;
 	for (let i=3;i--;) {
-		shapeColor.push(Math.floor(Math.random()*255));
-		bgColor.push(Math.floor(Math.random()*255));
+		// shapeColor.push(Math.floor(Math.random()*255));
+		let v=Math.floor(Math.random()*255);
+		bgColor.push(v);
+		shapeColor.push(v/255*shapeBrightness)
 	}
 	// console.log(contrast(shapeColor,bgColor))
 }
