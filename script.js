@@ -45,6 +45,7 @@ let missed = 0;
  *  };
  *  bg: number[];
  *  hit: boolean;
+ *  contrast: number;
  * }} DataPoint
  */
 
@@ -155,7 +156,11 @@ function getData() {
 	data.missed = missed;
 	data.total = hit+missed;
 	// document.getElementById("data").value = JSON.stringify(data,null,2);
-	document.getElementById("data").value = getCSV();
+	document.getElementById("data").value = dataToCSV();
+}
+
+function loadData() {
+	csvToData(document.getElementById("data").value);
 }
 
 /**
@@ -180,21 +185,41 @@ function flattenDataPoint(d) {
 	}
 }
 
-function getCSV() {
+/**
+ * 
+ * @param {Object.<string,any>} d 
+ * @returns {DataPoint}
+ */
+function expandFlatDataPoint(d) {
+	return {
+		time: d.time,
+		hit: d.hit,
+		shape: {
+			x: d.shapeX,
+			y: d.shapeY,
+			radius: d.shapeRadius,
+			color: [d.shapeR,d.shapeG,d.shapeB],
+		},
+		bg: [d.bgR,d.bgG,d.bgB],
+		contrast: d.contrast
+	}
+}
+
+function dataToCSV() {
 	let dataPoints = [];
 	let text = "";
 	for (let d of data.hitData) {
 		dataPoints.push(flattenDataPoint(d));
 	}
 	if (dataPoints.length) {
-		let feilds = Object.keys(dataPoints[0]);
-		for (let f of feilds) {
+		let fields = Object.keys(dataPoints[0]);
+		for (let f of fields) {
 			text += `${f},`;
 		}
 		text += "\n";
 		// text = text.slice(0,text.length-2); // remove last comma
 		for (let d of dataPoints) {
-			for (let f of feilds) {
+			for (let f of fields) {
 				text += `${d[f]},`
 			}
 			text += "\n";
@@ -202,6 +227,51 @@ function getCSV() {
 	}
 
 	return text;
+}
+
+/**
+ * 
+ * @param {string} csv 
+ */
+function csvToData(csv) {
+	let lines = csv.split("\n");
+	let fields = lines[0].split(",");
+	lines = lines.slice(1);
+
+	let csvHit = 0;
+	let csvMissed = 0;
+
+	/** @type {DataPoint[]} */
+	let newDataPoints = [];
+	for (let line of lines) {
+		/** @type {DataPoint} */
+		let dataPoint = {};
+
+		let values = line.split(',');
+		if (values.length == 0) continue;
+		for (let i=0;i<values.length;i++) {
+			if (values[i] == "") continue;
+			dataPoint[fields[i]] = values[i];
+		}
+
+		if (dataPoint.hit) {
+			csvHit++;
+		} else {
+			csvMissed++;
+		}
+
+		newDataPoints.push(dataPoint);
+	}
+
+	data.hitData = newDataPoints;
+	data.hit = csvHit;
+	data.missed = csvMissed;
+	data.total = csvHit+csvMissed;
+
+	hit = csvHit;
+	missed = csvMissed;
+
+	// return newDataPoints;
 }
 
 //#region color
